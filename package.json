@@ -1,0 +1,32 @@
+{
+  "name": "youtube-clone-project",
+  "version": "1.0.0",
+  "description": "First Clone Project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon --exec babel-node src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bandall/Youtube_Clone.git"
+  },
+  "author": "Bandall",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bandall/Youtube_Clone/issues"
+  },
+  "homepage": "https://github.com/bandall/Youtube_Clone#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "morgan": "^1.10.0",
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.10",
+    "@babel/node": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "nodemon": "^2.0.16"
+  }
+}
