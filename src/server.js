@@ -23,15 +23,15 @@ app.use(session({
 }));
 
 app.use((req, res, next) => {
-    console.log(res);
+   //console.log(res);
     req.sessionStore.all((error, sessions) => {
-        console.log(sessions);
+        //console.log(sessions);
         next();
     })
 });
 app.use(localsMiddleware)
 app.use("/", rootRouter);
-app.use("/user", userRouter);
+app.use("/users", userRouter);
 app.use("/videos", videoRouter);
 
 
