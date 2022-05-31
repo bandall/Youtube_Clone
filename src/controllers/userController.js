@@ -125,8 +125,67 @@ export const getEdit = (req, res) => {
     return res.render("edit-profile", {pageTitle: "Edit Profile"})
 };
 
-export const postEdit = (req, res) => {
-    return res.render("edit-profile")
+export const postEdit = async (req, res) => {
+    const {
+        session: {
+            user: { _id, avatarUrl },
+        },
+        body: { name, email, username, location },
+        file,
+    } = req;
+    console.log(file);
+    let searchParams = [];
+    const user = req.session.user;
+    if(user.email !== email) searchParams.push({email});
+    if(user.username !== username) searchParams.push({username});
+    if(searchParams.length !== 0) {
+        const exist = await User.findOne({ $or: searchParams });
+        if(exist) {
+            return res.status(400).render("edit-profile", {pageTitle: "Edit User", err: "Email or UserName has been already taken."});
+        }
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+        _id, 
+        {
+            avatarUrl: file ? file.path : avatarUrl,
+            name, email, username, location
+        },
+        { new : true },
+    );
+    req.session.user = updatedUser;
+    return res.redirect("/users/edit");
+}
+
+export const getChangePassword = (req, res) => {
+    return res.render("user/change-password", {pageTitle: "Change Password"});
+}
+
+export const postChangePassword = async (req, res) => {
+    const {
+        session: {
+            user: { _id },
+        },
+        body: { oldpwd, newpwd, newpwdConfirm },
+    } = req;
+    if(newpwdConfirm !== newpwd) {
+        return res.status(400).render("user/change-password", {
+            pageTitle: "Change Password", 
+            err:"The new Password doesn't match!"
+        });
+    };
+    const user = await User.findById(_id);
+    const valid = await bcrypt.compare(oldpwd, user.password);
+    if(!valid) {
+        return res.status(400).render("user/change-password", {
+            pageTitle: "Change Password", 
+            err:"The current password is incorrect!"
+        });
+    }
+    
+    user.password = newpwd;
+    user.save();
+    return res.redirect("/users/logout");
 }
 
 export const search = (req, res) => res.send("Logout");
