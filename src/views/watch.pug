@@ -3,30 +3,22 @@ extends base.pug
 block content 
     div#videoContainer
         video(src="/" + video.fileUrl) 
-        div
-            button#play Play 
-            button#mute Mute
-            input(type="range", value=0.5, step="0.1",min="0", max="1")#volumn
-            div 
-                span#currenTime 00:00
-                span  / 
-                span#totalTime 00:00
-            div 
-                input(type="range", value=0, step="1",min="0")#timeline
-            div 
-                button#fullScreen Enter Full Screen
-    //-
-        div
-            p=video.description
-            small=video.createdAt 
-        div 
-            small Uploaded by 
-                a(href=`/users/${video.owner._id}`)  #{video.owner.name} 
-        if loggedInUser 
-            if String(video.owner._id) === String(loggedInUser._id)
-                a(href=`${video.id}/edit`) Edit Video &rarr;
-                br
-                a(href=`${video.id}/delete`) Delete Video &rarr;
+        div#videoControls.videoControls
+            div.videoControls__play
+                span#play.videoControls__playBtn
+                    i.fas.fa-play
+                div.videoControls__time 
+                    span#currenTime 00:00
+                    span  / 
+                    span#totalTime 00:00
+            input(type="range", value=0, step="1",min="0")#timeline.videoControls__timeline
+            div.videoControls__volume
+                input(type="range", value=0.5, step="0.1",min="0", max="1")#volumn
+                span#mute
+                    i.fas.fa-volume-up
+            div
+                span#fullScreen 
+                    i.fas.fa-expand
 
 block scripts 
     script(src="/static/js/videoPlayer.js")
