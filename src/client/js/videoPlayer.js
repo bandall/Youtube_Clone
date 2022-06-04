@@ -104,9 +104,18 @@ const handleMouseOver = () => {
 }
 
 const handleKeyDownEvent = (event) => {
-    if(event.keyCode === 32)
+    if(event.keyCode === 32) {
         handlePlay();
-    event.preventDefault();
+        event.preventDefault();
+    } 
+}
+
+const handleEnded = async () => {
+    playBtnIcon.classList = "fa-solid fa-repeat";
+    const { id } = videoContainer.dataset;
+    await fetch(`/api/videos/${id}/view`, {
+        method: "POST",
+    });
 }
 
 video.addEventListener("loadedmetadata", handleLoadedMetadata);
@@ -114,6 +123,7 @@ video.addEventListener("timeupdate", handleTimeUpdate);
 video.addEventListener("mousemove", handleMouseMove);
 video.addEventListener("click", handlePlay);
 video.addEventListener("mouseleave", handleMouseLeave);
+video.addEventListener("ended", handleEnded);
 document.addEventListener("keydown", handleKeyDownEvent);
 videoControls.addEventListener("mouseover", handleMouseOver);
 playBtn.addEventListener("click", handlePlay);
