@@ -71,17 +71,24 @@ const handleStart = async () => {
         video.src = videoFile;
         video.loop = true;
         video.play();
+        actionBtn.innerText = "Download";
+        actionBtn.disabled = false;
+        actionBtn.addEventListener("click", handleDownload);
     }
     recorder.start();
     setTimeout(() => {
-
-    })
+        recorder.stop();
+    }, 5000);
 };
 
 const init = async () => {
     stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
         video: true,
+        video: {
+            width: 1024,
+            height: 576,
+        },
     });
     video.srcObject = stream;
     video.play();

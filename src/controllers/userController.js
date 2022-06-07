@@ -24,7 +24,6 @@ export const postJoin = async (req, res) => {
         });
     res.redirect("/login");
    } catch (error) {
-        //console.log(error);
         return res.status(400).render("join", {pageTitle: "Join", errMsg:error._message});
     }
 };
@@ -117,6 +116,7 @@ export const finishGithubLogin = async (req, res) => {
 }
 
 export const logout = (req, res) => {
+    req.flash("info", "Bye Bye");
     req.session.destroy();
     return res.redirect("/");
 };
@@ -159,6 +159,11 @@ export const postEdit = async (req, res) => {
 }
 
 export const getChangePassword = (req, res) => {
+    console.log(req.session.user.socialOnly);
+    if(req.session.user.socialOnly === true) {
+        req.flash("error", "Social login can't change password");
+        return res.redirect("/");
+    }
     return res.render("user/change-password", {pageTitle: "Change Password"});
 }
 
@@ -186,6 +191,7 @@ export const postChangePassword = async (req, res) => {
     
     user.password = newpwd;
     user.save();
+    req.flash("info", "Password Changed");
     return res.redirect("/users/logout");
 }
 

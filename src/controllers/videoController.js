@@ -1,6 +1,6 @@
 import User from "../models/User";
 import Video from "../models/Video";
-//ideo.find({}, (error, videos) => {});
+
 
 export const home = async (req, res) => {
     try {
@@ -30,6 +30,7 @@ export const getEdit = async (req, res) => {
         return res.status(404).render("404", { pageTitle: "Video Not Found!"});
     }
     if(String(video.owner) !== String(_id)) {
+        req.flash("error", "Not Authorized");
         return res.status(403).redirect("/");
     }
     return res.render("edit", { pageTitle: `Edit ${video.title}`, video:video});
@@ -46,6 +47,7 @@ export const postEdit = async (req, res) => {
         return res.status(404).render("404", { pageTitle: "Video Not Found!"});
     }
     if(String(video.owner) !== String(_id)) {
+        req.flash("error", "Not Authorized");
         return res.status(403).redirect("/");
     }
 
@@ -78,12 +80,21 @@ export const postUpload = async (req, res) => {
     const {
         user: { _id },
     } = req.session;
+    //make Default Thumbnail
+    let thumUrl;
+    if(thumb == null) {
+        thumUrl = "uploads/video/defaultThumb.jpg";
+    }
+    else {
+        thumUrl = thumb[0].destination + "/" + thumb[0].filename;
+    }
+
     try {
         const { title, description, hashtags } = req.body;
         const newVideo = await Video.create({
             title,
             fileUrl: video[0].path,
-            thumbUrl: thumb[0].destination + "/" + thumb[0].filename,
+            thumbUrl: thumUrl,
             description,
             owner: _id,
             hashtags: Video.formatHastages(hashtags),
@@ -103,11 +114,14 @@ export const deleteVideo = async (req, res) => {
     const {
         user: { _id },
     } = req.session;
-    const video = await findById(id);
+    console.log("Asdf");
+    const video = await Video.findById(id);
+    console.log("zxcv");
     if(!video){
         return res.status(404).render("404", { pageTitle: "Video Not Found!"});
     }
     if(String(video.owner) !== String(_id)) {
+        req.flash("error", "Not Authorized");
         return res.status(403).redirect("/");
     }
     await Video.findByIdAndDelete(id);
