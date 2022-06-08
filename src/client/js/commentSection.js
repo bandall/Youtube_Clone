@@ -13,10 +13,13 @@ const addFakeComment = (text, id) => {
     const span = document.createElement("span");
     span.innerText = ` ${text}`;
     const span2 = document.createElement("span");
-    span2.innerText = "❌";
+    span2.innerText = " ❌";
+    span2.classList = "video__comment-delete";
+    span2.id = "deleteComment";
     newComment.appendChild(icon);
     newComment.appendChild(span);
-    newComment.appendChild(span);
+    newComment.appendChild(span2);
+    span2.addEventListener("click", handleDelete);
     videoComments.prepend(newComment);
 }
 
@@ -34,27 +37,21 @@ const handleSubmit = async (event) => {
         body: JSON.stringify({ text }),
     });
     
-    
     if(response.status === 201)  {
         const { commentId } = await response.json();
         addFakeComment(text, commentId);
         textarea.value = "";
     }
-    //window.location.reload();
 };
 
 const handleDelete = async (event) => {
-    console.log("Here");
-    const videoId = videoContainer.dataset.id;
-    const commentId = event.target.parentElement.dataset.id;
+    const element = event.target.parentElement;
+    const commentId = element.dataset.id;
     const response = await fetch(`/api/comment/${commentId}`, {
         method: "DELETE",
     });
     if(response.status === 204) {
-        console.log("success");
-    }
-    else {
-        console.log("fail");
+        element.remove();
     }
 }
 
