@@ -16,8 +16,8 @@ let volumeVal = 0.5;
 video.volume = volumeVal;
 let controlsTimeOut = null;
 let controlsMovementTimeOut = null;
-
 const handlePlay = () => {
+
     if(video.paused) {
         video.play();
     } else {
@@ -104,7 +104,7 @@ const handleMouseOver = () => {
 }
 
 const handleKeyDownEvent = (event) => {
-    if(event.keyCode === 32) {
+    if(event.keyCode === 32 && document.activeElement.tagName != "TEXTAREA") {
         handlePlay();
         event.preventDefault();
     } 

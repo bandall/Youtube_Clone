@@ -1,5 +1,8 @@
+import { async } from "regenerator-runtime";
 import User from "../models/User";
 import Video from "../models/Video";
+import Comment from "../models/Comment";
+import session from "express-session";
 
 
 export const home = async (req, res) => {
@@ -13,7 +16,7 @@ export const home = async (req, res) => {
 };
 export const watch = async (req, res) => {
     const { id }= req.params;
-    const video = await Video.findById(id).populate("owner");
+    const video = await Video.findById(id).populate("owner").populate("comments");
     if(video == null){
         return res.status(400).render("404", { pageTitle: "Video Not Found!"});
     }
@@ -114,9 +117,7 @@ export const deleteVideo = async (req, res) => {
     const {
         user: { _id },
     } = req.session;
-    console.log("Asdf");
     const video = await Video.findById(id);
-    console.log("zxcv");
     if(!video){
         return res.status(404).render("404", { pageTitle: "Video Not Found!"});
     }
@@ -139,3 +140,44 @@ export const registerView = async (req, res) => {
     await video.save();
     return res.sendStatus(200);
 }
+
+export const addComment = async (req, res) => {
+    const {
+        session: { user },
+        body: { text },
+        params: { id },
+    } = req;
+    const video = await Video.findById(id);
+    if(!video) {
+        return res.sendStatus(404);
+    }
+    const newComment = await Comment.create({
+        owner: user._id,
+        text,
+        video: id
+    });
+    video.comments.push(newComment._id);
+    await video.save();
+    return res.status(201).json({ commentId:newComment._id });
+}
+
+export const deleteComment = async (req, res) => {
+    const {
+        params: { id },
+        session: { user },
+    } = req;
+    const comment = Comment.findByIdAndDelete(id).populate("owner");
+    
+    if(!comment) {
+        return res.sendStatus(404);
+    }
+    
+    if(String(comment.owner._id) !== String(user)) {
+        return res.sendStatus(404);
+    }
+
+    await Comment.findByIdAndDelete(id);
+
+    
+    return res.sendStatus(204);
+};

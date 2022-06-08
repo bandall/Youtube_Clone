@@ -16,7 +16,7 @@ app.set("view engine", "pug");
 app.set("views", process.cwd() + "/src/views");
 app.use(logger);
 app.use(express.urlencoded({extended: true}));
-
+app.use(express.json());
 app.use(session({
     secret: process.env.COOKIE_SECRET,
     resave: false,
@@ -25,9 +25,7 @@ app.use(session({
 }));
 
 app.use((req, res, next) => {
-   //console.log(res);
     req.sessionStore.all((error, sessions) => {
-        //console.log(sessions);
         next();
     })
 });
