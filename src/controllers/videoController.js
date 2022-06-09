@@ -102,20 +102,21 @@ export const postUpload = async (req, res) => {
     const {
         user: { _id },
     } = req.session;
+    const isHeroku = process.env.NODE_ENV === "production";
     //make Default Thumbnail
     let thumUrl;
     if(thumb == null) {
-        thumUrl = "https://wetube-bandall.s3.ap-northeast-2.amazonaws.com/c0a5ab8be74d392c2b9003bb41103d7d";
+        thumUrl = isHeroku ? "https://wetube-bandall.s3.ap-northeast-2.amazonaws.com/c0a5ab8be74d392c2b9003bb41103d7d" : "/uploads/video/defaultThumb.jpg";
     }
     else {
-        thumUrl = thumb[0].location;
+        thumUrl = isHeroku ? thumb[0].location : thumb[0].path;
     }
 
     try {
         const { title, description, hashtags } = req.body;
         const newVideo = await Video.create({
             title,
-            fileUrl: video[0].location,
+            fileUrl: isHeroku ? video[0].location : video[0].path,
             thumbUrl: thumUrl,
             description,
             owner: _id,
