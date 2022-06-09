@@ -16,8 +16,13 @@ let volumeVal = 0.5;
 video.volume = volumeVal;
 let controlsTimeOut = null;
 let controlsMovementTimeOut = null;
+let isMetaLoaded = false;
 const handlePlay = () => {
-
+    if(!isMetaLoaded) {
+        handleLoadedMetadata();
+        isMetaLoaded = true;
+    }
+    
     if(video.paused) {
         video.play();
     } else {
