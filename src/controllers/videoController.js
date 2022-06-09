@@ -105,10 +105,10 @@ export const postUpload = async (req, res) => {
     //make Default Thumbnail
     let thumUrl;
     if(thumb == null) {
-        thumUrl = "uploads/video/defaultThumb.jpg";
+        thumUrl = "https://wetube-bandall.s3.ap-northeast-2.amazonaws.com/c0a5ab8be74d392c2b9003bb41103d7d";
     }
     else {
-        thumUrl = thumb[0].destination + "/" + thumb[0].filename;
+        thumUrl = thumb[0].location + "/" + thumb[0].location;
     }
 
     try {

@@ -4,6 +4,11 @@
         margin-bottom: 10px;
         display: block;
     }
+    img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
 }
 .edit-profile__password {
     margin-top: 50px;
@@ -11,4 +16,14 @@
     a{
         text-decoration: underline;
     }
+}
+
+.profile__avatar {
+    display: block;
+    margin: 0px auto;
+    margin-bottom: 50px;
+    text-align: center;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
 }
