@@ -108,14 +108,14 @@ export const postUpload = async (req, res) => {
         thumUrl = "https://wetube-bandall.s3.ap-northeast-2.amazonaws.com/c0a5ab8be74d392c2b9003bb41103d7d";
     }
     else {
-        thumUrl = thumb[0].location + "/" + thumb[0].location;
+        thumUrl = thumb[0].location;
     }
 
     try {
         const { title, description, hashtags } = req.body;
         const newVideo = await Video.create({
             title,
-            fileUrl: video[0].path,
+            fileUrl: video[0].location,
             thumbUrl: thumUrl,
             description,
             owner: _id,
@@ -125,6 +125,7 @@ export const postUpload = async (req, res) => {
         user.videos.push(newVideo._id);
         user.save();
     } catch (error) {
+        console.log(error);
         return res.status(400).render("upload", {pageTitle: "Upload Videos", errMsg:error._message});
     }
     return res.redirect("/");
