@@ -118,7 +118,7 @@ const handleEnded = async () => {
     });
 }
 
-video.addEventListener("loadedmetadata", handleLoadedMetadata);
+video.addEventListener("canplay", handleLoadedMetadata);
 video.addEventListener("timeupdate", handleTimeUpdate);
 video.addEventListener("mousemove", handleMouseMove);
 video.addEventListener("click", handlePlay);
